@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Webber IDE</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: 38px 1fr;
+      height: 100vh;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: #2d2d2d;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 10px;
+      border-bottom: 1px solid #3c3c3c;
+    }
+
+    button {
+      background: #0e639c;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:hover {
+      background: #1177bb;
+    }
+
+    #active-file {
+      margin-left: auto;
+      font-size: 12px;
+      color: #9cdcfe;
+    }
+
+    /* 3-Column Workspace with 5px Resizer Tracks */
+    .workspace {
+      display: grid;
+      grid-template-columns: 220px 5px 1fr 5px 260px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Resizer Bars */
+    .resizer-v {
+      background: #2d2d2d;
+      cursor: col-resize;
+      transition: background 0.15s;
+    }
+
+    .resizer-h {
+      background: #2d2d2d;
+      cursor: row-resize;
+      transition: background 0.15s;
+    }
+
+    .resizer-v:hover,
+    .resizer-h:hover,
+    .resizing {
+      background: #0e639c;
+    }
+
+    /* Left: Directory Explorer */
+    .sidebar-left {
+      background: #252526;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .file-item {
+      padding: 4px 8px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-item:hover {
+      background: #2a2d2e;
+    }
+
+    .file-item.active {
+      background: #37373d;
+      color: #fff;
+    }
+
+    /* Middle: Editor + Horizontal Resizer + Preview */
+    .middle-pane {
+      display: grid;
+      grid-template-rows: 1fr 5px 1fr;
+      overflow: hidden;
+    }
+
+    #editor {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+    }
+
+    /* Right: Class & ID Inspector */
+    .sidebar-right {
+      background: #252526;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .stat-box {
+      background: #1e1e1e;
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .symbol-item {
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .badge {
+      color: #4ec9b0;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <button id="open-folder-btn">Open Folder</button>
+    <button id="save-file-btn">Save (Ctrl+S)</button>
+    <span id="active-file">No file open</span>
+  </header>
+
+  <main class="workspace" id="workspace">
+    <aside class="sidebar-left">
+      <div class="panel-title">Explorer</div>
+      <div id="file-tree">Click "Open Folder" to start</div>
+    </aside>
+
+    <div class="resizer-v" id="resizer-left"></div>
+
+    <section class="middle-pane" id="middle-pane">
+      <div id="editor"></div>
+      <div class="resizer-h" id="resizer-mid"></div>
+      <iframe id="preview" sandbox="allow-scripts allow-modals"></iframe>
+    </section>
+
+    <div class="resizer-v" id="resizer-right"></div>
+
+    <aside class="sidebar-right">
+      <div class="panel-title">Inspector</div>
+      <div class="stat-box" id="inspector-stats">
+        Lines: 0<br />
+        Classes: 0<br />
+        IDs: 0
+      </div>
+      <div class="panel-title">Found Classes/Ids</div>
+      <div id="symbol-list"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
